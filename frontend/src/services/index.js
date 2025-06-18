@@ -1,4 +1,4 @@
-const URL = import.meta.env.VITE_BACKEND_URL;
+const URL = import.meta.env.VITE_BACKEND_URL || "https://citymall-ql76.onrender.com";
 export async function addMeme(form, tagsArray) {
   try {
     // console.log(form);

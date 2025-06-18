@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import MemeCard from "./components/MemeCard";
 import { useEffect } from "react";
-import { getAllMemes } from "./services";
+import { getAllMemes, addMeme } from "./services";
 import Leaderboard from "./components/Leaderboard";
 import { useSocket } from "./hooks/useSocket";
 import CreateMemeModal from "./components/CreateMemeModal";
@@ -22,6 +22,17 @@ function AppContent() {
         console.error('Error fetching memes:', error);
       })
       .finally(() => setIsLoading(false));
+  };
+
+  const handleCreateMeme = async (form, tagsArray) => {
+    try {
+      await addMeme(form, tagsArray);
+      setModalOpen(false);
+      fetchMemes();
+    } catch (error) {
+      console.error('Error creating meme:', error);
+      alert('Failed to create meme. Please try again.');
+    }
   };
 
   useEffect(() => {
@@ -89,7 +100,8 @@ function AppContent() {
 
       <CreateMemeModal 
         open={modalOpen} 
-        onClose={() => setModalOpen(false)} 
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleCreateMeme}
       />
     </div>
   );

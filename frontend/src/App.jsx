@@ -15,13 +15,12 @@ function AppContent() {
 
   const fetchMemes = () => {
     getAllMemes()
-      .then(async (response) => {
-        const data = await response.json();
-        if (response.ok) {
-          setMemes(data);
-        }
+      .then((data) => {
+        setMemes(data);
       })
-      .catch()
+      .catch((error) => {
+        console.error('Error fetching memes:', error);
+      })
       .finally(() => setIsLoading(false));
   };
 

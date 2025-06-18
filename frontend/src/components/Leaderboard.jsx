@@ -10,21 +10,18 @@ export default function Leaderboard() {
 
   const getLeaderboard = async () => {
     try {
-      const response = await fetchLeaderboard();
-      const data = await response.json();
-      if (response.ok) {
-        // Generate random names for new bidders
-        const newBidderNames = { ...bidderNames };
-        data.forEach(meme => {
-          if (meme.topBid && meme.topBid.user_id && !bidderNames[meme.topBid.user_id]) {
-            newBidderNames[meme.topBid.user_id] = getRandomName();
-          }
-        });
-        setBidderNames(newBidderNames);
-        setTopMemes(data);
-      }
+      const data = await fetchLeaderboard();
+      // Generate random names for new bidders
+      const newBidderNames = { ...bidderNames };
+      data.forEach(meme => {
+        if (meme.topBid && meme.topBid.user_id && !bidderNames[meme.topBid.user_id]) {
+          newBidderNames[meme.topBid.user_id] = getRandomName();
+        }
+      });
+      setBidderNames(newBidderNames);
+      setTopMemes(data);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching leaderboard:', error);
     } finally {
       setIsLoading(false);
     }

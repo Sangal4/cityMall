@@ -7,11 +7,19 @@ const getApiUrl = (endpoint) => {
   return `${baseUrl}${path}`;
 };
 
+// Helper function to handle API responses
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
 export async function addMeme(form, tagsArray) {
   try {
     // console.log(form);
 
-    const res = await fetch(getApiUrl('memes'), {
+    const response = await fetch(getApiUrl('memes'), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +31,7 @@ export async function addMeme(form, tagsArray) {
       }),
     });
 
-    return res;
+    return handleResponse(response);
   } catch (error) {
     console.error(error);
     throw error;
@@ -34,11 +42,11 @@ export async function getAllMemes() {
   try {
     // console.log(form);
 
-    const res = await fetch(getApiUrl('memes'), {
+    const response = await fetch(getApiUrl('memes'), {
       method: "GET",
     });
 
-    return res;
+    return handleResponse(response);
   } catch (error) {
     console.error(error);
     throw error;
@@ -47,7 +55,7 @@ export async function getAllMemes() {
 
 export async function voteMeme(id, type) {
   try {
-    const res = await fetch(getApiUrl(`memes/${id}/vote`), {
+    const response = await fetch(getApiUrl(`memes/${id}/vote`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +63,7 @@ export async function voteMeme(id, type) {
       body: JSON.stringify({type}),
     });
 
-    return res;
+    return handleResponse(response);
   } catch (error) {
     console.error(error);
     throw error;
@@ -65,11 +73,11 @@ export async function voteMeme(id, type) {
 export async function fetchLeaderboard() {
   try {
     
-    const res = await fetch(getApiUrl('leaderboard?top=10'), {
+    const response = await fetch(getApiUrl('leaderboard?top=10'), {
       method: "GET",
     });
 
-    return res;
+    return handleResponse(response);
   } catch (error) {
     console.error(error);
     throw error;
@@ -80,7 +88,7 @@ export async function updateBid(id,bid) {
 
   
   try {
-    const res = await fetch(getApiUrl(`memes/${id}/bid`), {
+    const response = await fetch(getApiUrl(`memes/${id}/bid`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +96,7 @@ export async function updateBid(id,bid) {
       body: JSON.stringify({credits: parseInt(bid)}),
     });
 
-    return res;
+    return handleResponse(response);
   } catch (error) {
     console.error(error);
     throw error;
@@ -97,11 +105,11 @@ export async function updateBid(id,bid) {
 
 export async function generateCaption(id) {
   try {
-    const res = await fetch(getApiUrl(`memes/${id}/caption`), {
+    const response = await fetch(getApiUrl(`memes/${id}/caption`), {
       method: "POST"
     });
 
-    return res;
+    return handleResponse(response);
   } catch (error) {
     console.error(error);
     throw error;

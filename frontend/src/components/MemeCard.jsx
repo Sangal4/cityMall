@@ -33,19 +33,13 @@ export default function MemeCard({ meme, refresh, latestBid }) {
     setBid("");
 
     try {
-      const response = await updateBid(meme.id, bid);
-      const data = await response.json();
-      if (response.ok) {
-        updateMemeBid(meme.id, data.topBid);
-      } else {
-        // Revert optimistic update on failure
-        updateMemeBid(meme.id, meme.topBid);
-        alert("Failed to place bid. Please try again.");
-      }
+      const data = await updateBid(meme.id, bid);
+      updateMemeBid(meme.id, data.topBid);
     } catch (error) {
       // Revert optimistic update on error
       updateMemeBid(meme.id, meme.topBid);
-      console.error(error);
+      console.error('Error placing bid:', error);
+      alert("Failed to place bid. Please try again.");
     }
   };
 
@@ -53,15 +47,10 @@ export default function MemeCard({ meme, refresh, latestBid }) {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await generateCaption(meme.id);
-      const data = await response.json();
-      if (response.ok) {
-        refresh();
-      } else {
-        alert("Error generating AI captions");
-      }
+      await generateCaption(meme.id);
+      refresh();
     } catch (error) {
-      console.error(error);
+      console.error('Error generating AI captions:', error);
       alert("Error generating AI captions");
     } finally {
       setLoading(false);
@@ -78,19 +67,13 @@ export default function MemeCard({ meme, refresh, latestBid }) {
     updateMemeVotes(meme.id, newVotes);
 
     try {
-      const response = await voteMeme(meme.id, type);
-      const data = await response.json();
-      if (response.ok) {
-        updateMemeVotes(meme.id, data.upvotes);
-      } else {
-        // Revert optimistic update on failure
-        updateMemeVotes(meme.id, meme.upvotes);
-        alert("Failed to vote. Please try again.");
-      }
+      const data = await voteMeme(meme.id, type);
+      updateMemeVotes(meme.id, data.upvotes);
     } catch (error) {
       // Revert optimistic update on error
       updateMemeVotes(meme.id, meme.upvotes);
-      console.error(error);
+      console.error('Error voting:', error);
+      alert("Failed to vote. Please try again.");
     } finally {
       setIsVoting(false);
     }
